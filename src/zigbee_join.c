@@ -56,7 +56,7 @@ PUBLIC bool bRejoining = FALSE;
 PRIVATE ZPS_tsNwkNetworkDescr tsDiscovedNWKList[MAX_SINGLE_CHANNEL_NETWORKS];
 PRIVATE uint8 u8DiscovedNWKListCount = 0;
 PRIVATE uint8 u8DiscovedNWKJoinCount = 0;
-PRIVATE uint8 u8LocalChannelMask = 11;
+//PRIVATE uint8 u8LocalChannelMask = 11;
 
 /****************************************************************************/
 /***        Exported Variables                                            ***/
@@ -291,7 +291,7 @@ int AT_joinNetworkWithIndex(uint16 *regAddr)
     }
     else
     {
-        len = sprintf(tmp, "Joining PAN: %08x%08x \r\n",
+        len = sprintf(tmp, "Joining PAN: %08lx%08lx \r\n",
                       (uint32)(tsDiscovedNWKList[u8DiscovedNWKJoinCount].u64ExtPanId >> 32),
                       (uint32)(tsDiscovedNWKList[u8DiscovedNWKJoinCount].u64ExtPanId)
                      );
@@ -342,7 +342,7 @@ int API_JoinNetworkWithIndex_CallBack(tsApiSpec *inputApiSpec, tsApiSpec *retApi
 
         if (idx > u8DiscovedNWKListCount || u8DiscovedNWKListCount == 0)
         {
-            len = sprintf(tmp, "Illegal Index\r\n");
+            len = sprintf((char*)tmp, "Illegal Index\r\n");
             DBG_vPrintf(TRACE_JOIN, "%s", tmp);
             result = 1;
             break;
@@ -359,7 +359,7 @@ int API_JoinNetworkWithIndex_CallBack(tsApiSpec *inputApiSpec, tsApiSpec *retApi
             break;
         } else
         {
-            len = sprintf(tmp, "Joining PAN: %08x%08x \r\n",
+            len = sprintf(tmp, "Joining PAN: %08lx%08lx \r\n",
                           (uint32)(tsDiscovedNWKList[u8DiscovedNWKJoinCount].u64ExtPanId >> 32),
                           (uint32)(tsDiscovedNWKList[u8DiscovedNWKJoinCount].u64ExtPanId)
                          );
@@ -394,7 +394,7 @@ int API_JoinNetworkWithIndex_CallBack(tsApiSpec *inputApiSpec, tsApiSpec *retApi
         int size = assembleLocalAtResp(&localAtResp,
                                       inputApiSpec->payload.localAtReq.frameId,
                                       inputApiSpec->payload.localAtReq.atCmdId,
-                                      resp, tmp, len);
+                                      resp, (uint8*)tmp, len);
         assembleApiSpec(retApiSpec, API_LOCAL_AT_RESP, (uint8 *)&localAtResp, size);
     } else if (API_REMOTE_AT_REQ == inputApiSpec->teApiIdentifier)
     {
@@ -402,7 +402,7 @@ int API_JoinNetworkWithIndex_CallBack(tsApiSpec *inputApiSpec, tsApiSpec *retApi
         int size = assembleRemoteAtResp(&remoteAtResp,
                                        inputApiSpec->payload.remoteAtReq.frameId,
                                        inputApiSpec->payload.remoteAtReq.atCmdId,
-                                       resp, tmp, len);
+                                       resp, (uint8*)tmp, len);
         assembleApiSpec(retApiSpec, API_REMOTE_AT_RESP, (uint8 *)&remoteAtResp, size);
     }
     return OK;
@@ -787,7 +787,7 @@ int AT_listNetworkScaned(uint16 *regAddr)
     {
         for (i = 0; i < u8DiscovedNWKListCount; i++)
         {
-            j = sprintf(tmp, "Index: %d, PAN: %08x%08x, Permit J: %d, CH: %d\r\n", i,
+            j = sprintf(tmp, "Index: %d, PAN: %08lx%08lx, Permit J: %d, CH: %d\r\n", i,
                         (uint32)(tsDiscovedNWKList[i].u64ExtPanId >> 32),
                         (uint32)(tsDiscovedNWKList[i].u64ExtPanId),
                         tsDiscovedNWKList[i].u8PermitJoining,

@@ -36,6 +36,7 @@
 #include "firmware_api_pack.h"
 #include "firmware_cmi.h"
 #include "firmware_sleep.h"
+#include "firmware_rpc.h"
 #include "suli.h"
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
@@ -233,8 +234,9 @@ int AT_RPC(uint16 *regAddr)
 {
     uart_printf("send RPC req to %04x\r\n", g_sDevice.config.unicastDstAddr);
     char tmp[] = "/home_obj1/run param1 param2";
+    uint64 mac_addr = 0x00158d0000355273ULL;
     //API_bSendToEndPoint(UNICAST, g_sDevice.config.unicastDstAddr, 2, 2, tmp, sizeof(tmp));
-    RPC_vCaller(0x00158d0000355273, tmp);
+    RPC_vCaller(mac_addr, tmp);
     return OK;
 }
 /****************************************************************************
@@ -1344,6 +1346,7 @@ int API_Adc_callBack(tsApiSpec *reqApiSpec, tsApiSpec *respApiSpec, uint16 *regA
                         (uint8 *)&remoteAtResp,
                         sizeof(tsRemoteAtResp));
     }
+    return OK;
 }
 /****************************************************************************
 *
@@ -1434,6 +1437,7 @@ int API_i32Gpio_CallBack(tsApiSpec *reqApiSpec, tsApiSpec *respApiSpec, uint16 *
                         sizeof(tsRemoteAtResp));
 
     }
+    return OK;
 }
 
 /****************************************************************************
@@ -1595,7 +1599,7 @@ int API_i32AtCmdProc(uint8 *buf, int len)
         return ERRNCMD;
 
     // read the AT
-    if (strncasecmp("AT", buf, 2) == 0)
+    if (strncasecmp("AT", (char*)buf, 2) == 0)
     {
         // read the command
         int cnt = sizeof(atCommands) / sizeof(AT_Command_t);
@@ -1604,7 +1608,7 @@ int API_i32AtCmdProc(uint8 *buf, int len)
         for (i = 0; i < cnt; i++)
         {
             // do we have a known command
-            if (strncasecmp(buf + 2, atCommands[i].name, 2) == 0)
+            if (strncasecmp((char*)(buf + 2), atCommands[i].name, 2) == 0)
             {
                 /* There is no parameter */
                 if (atCommands[i].paramDigits == 0)
@@ -1735,7 +1739,7 @@ int API_i32ApiFrmProc(tsApiSpec *apiSpec)
             size = i32CopyApiSpec(apiSpec, tmp);
             if (destAddr == 0xfffe)
             {
-                ret = API_bSendToMacDev(destAddr64, TRANS_ENDPOINT_ID, TRANS_ENDPOINT_ID, tmp, size);
+                ret = API_bSendToMacDev(destAddr64, TRANS_ENDPOINT_ID, TRANS_ENDPOINT_ID, (char*)tmp, size);
             } else
             {
                 ret = API_bSendToAirPort(txMode, destAddr, tmp, size);
@@ -1766,7 +1770,7 @@ int API_i32ApiFrmProc(tsApiSpec *apiSpec)
             size = i32CopyApiSpec(apiSpec, tmp);
             if (destAddr == 0xfffe)
             {
-                ret = API_bSendToMacDev(destAddr64, TRANS_ENDPOINT_ID, TRANS_ENDPOINT_ID, tmp, size);
+                ret = API_bSendToMacDev(destAddr64, TRANS_ENDPOINT_ID, TRANS_ENDPOINT_ID, (char*)tmp, size);
             } else
             {
                 ret = API_bSendToAirPort(txMode, destAddr, tmp, size);
@@ -2243,7 +2247,7 @@ bool API_bSendToAirPort(uint16 txMode, uint16 unicastDest, uint8 *buf, int len)
                                         SEC_MODE_FOR_DATA_ON_AIR,
                                         0,
                                         NULL);
-    } else if (UNICAST == txMode)
+    } else// if (UNICAST == txMode)
     {
         DBG_vPrintf(TRACE_ATAPI, "SendToAirPort Unicast len %d to 0x%04x ...\r\n", len, unicastDest);
 
@@ -2313,7 +2317,7 @@ bool API_bSendToEndPoint(uint16 txMode, uint16 unicastDest, uint8 srcEpId, uint8
                                         SEC_MODE_FOR_DATA_ON_AIR,
                                         0,
                                         NULL);
-    } else if (UNICAST == txMode)
+    } else// if (UNICAST == txMode)
     {
         DBG_vPrintf(TRACE_ATAPI, "SendToEndPoint Unicast %d to 0x%04x...\r\n", len, unicastDest);
 

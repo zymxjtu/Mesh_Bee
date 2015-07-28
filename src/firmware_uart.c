@@ -27,6 +27,9 @@
 #include "common.h"
 #include "firmware_uart.h"
 #include "firmware_cmi.h"
+#ifdef TARGET_END
+#include "firmware_sleep.h"
+#endif
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
 /****************************************************************************/

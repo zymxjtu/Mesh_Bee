@@ -47,14 +47,14 @@
 /* 
  * [RpcMethod prototypes] 
 */
-bool A_run(tsArguments tsArg);
-bool A_stop(tsArguments tsArg);
-bool B_run(tsArguments tsArg);
-bool B_stop(tsArguments tsArg);
-bool C_run(tsArguments tsArg);
-bool C_stop(tsArguments tsArg);
-bool D_run(tsArguments tsArg);
-bool D_stop(tsArguments tsArg);
+bool A_run(tsArguments *tsArg);
+bool A_stop(tsArguments *tsArg);
+bool B_run(tsArguments *tsArg);
+bool B_stop(tsArguments *tsArg);
+bool C_run(tsArguments *tsArg);
+bool C_stop(tsArguments *tsArg);
+bool D_run(tsArguments *tsArg);
+bool D_stop(tsArguments *tsArg);
 
 
 /* hash tree search algorithm for rpc_func search */
@@ -88,49 +88,49 @@ tsRpcEntity rpcEntity[] = {
 };
 
 /* Step3, [Rpc Method defined here] */
-bool A_run(tsArguments tsArg)
+bool A_run(tsArguments *tsArg)
 {
     DBG_vPrintf(TRACE_RPC, "home_obj is running \r\n");
     return TRUE;
 }
 
-bool A_stop(tsArguments tsArg)
+bool A_stop(tsArguments *tsArg)
 {
 	DBG_vPrintf(TRACE_RPC, "home_obj is stopping \r\n");
     return TRUE;
 }
 
-bool B_run(tsArguments tsArg)
+bool B_run(tsArguments *tsArg)
 {
 	DBG_vPrintf(TRACE_RPC, "office_obj2 is running \r\n");
     return TRUE;
 }
 
-bool B_stop(tsArguments tsArg)
+bool B_stop(tsArguments *tsArg)
 {
 	DBG_vPrintf(TRACE_RPC, "office_obj2 is stopping \r\n");
     return TRUE;
 }
 
-bool C_run(tsArguments tsArg)
+bool C_run(tsArguments *tsArg)
 {
 
     return TRUE;
 }
 
-bool C_stop(tsArguments tsArg)
+bool C_stop(tsArguments *tsArg)
 {
 
     return TRUE;
 }
 
-bool D_run(tsArguments tsArg)
+bool D_run(tsArguments *tsArg)
 {
 
     return TRUE;
 }
 
-bool D_stop(tsArguments tsArg)
+bool D_stop(tsArguments *tsArg)
 {
 
     return TRUE;

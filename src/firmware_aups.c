@@ -27,6 +27,8 @@
 /****************************************************************************/
 #include "firmware_aups.h"
 #include "firmware_uart.h"
+#include "firmware_sleep.h"
+#include "firmware_at_api.h"
 #include "suli.h"
 #include "ups_arduino_sketch.h"
 #include "firmware_hal.h"
@@ -63,7 +65,7 @@ uint8 aups_air_mempool[AUPS_AIR_RB_LEN] = {0};
 /***        Local Variables                                               ***/
 /****************************************************************************/
 
-PRIVATE uint32 _loopInterval = 0;
+//PRIVATE uint32 _loopInterval = 0;
 
 
 /****************************************************************************/
@@ -248,6 +250,7 @@ PUBLIC uint8 aupsSendApiFrm(void *data, int len)
     {
         vResetATimer(APP_tmrHandleUartRx, APP_TIME_MS(5));  //Activate SPM 5ms later
     }
+    return OK;
 }
 
 
@@ -269,7 +272,7 @@ OS_TASK(Arduino_Loop)
     {
         /* Back-Ground to search AT delimiter */
         uint8 tmp[AUPS_UART_RB_LEN];
-        uint32 avlb_cnt = suli_uart_readable(NULL, NULL);
+        uint32 avlb_cnt = suli_uart_readable(NULL, 0);
         uint32 min_cnt = MIN(AUPS_UART_RB_LEN, avlb_cnt);
 
         /* Read,not pop,make sure we don't pollute user data in AUPS ringbuffer */
@@ -278,7 +281,7 @@ OS_TASK(Arduino_Loop)
         {
             /* Set AT mode */
             setNodeState(E_MODE_AT);
-            suli_uart_printf(NULL, NULL, "Enter AT Mode.\r\n");
+            suli_uart_printf(NULL, 0, "Enter AT Mode.\r\n");
 
             /* Clear ringbuffer of AUPS */
             OS_eEnterCriticalSection(mutexRxRb);

@@ -57,10 +57,11 @@ static bool SLEEP_ENABLE = false;  /* if enable a sleep, set this flag */
 /****************************************************************************/
 /***        Local Variables                                               ***/
 /****************************************************************************/
+#ifdef TARGET_END
 PRIVATE uint32 _wakeupTime = 0;
-
 /* Pointer to a structure to be populated with the wake point and callback function */
 PRIVATE	pwrm_tsWakeTimerEvent	sWake;
+#endif
 
 /****************************************************************************/
 /***        External Variables                                            ***/

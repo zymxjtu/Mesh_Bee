@@ -28,6 +28,9 @@
 #include "common.h"
 #include "zps_apl_aib.h"
 #include "firmware_at_api.h"
+#ifdef TARGET_END
+#include "firmware_sleep.h"
+#endif
 
 #ifndef TRACE_ADS
 #define TRACE_ADS  FALSE

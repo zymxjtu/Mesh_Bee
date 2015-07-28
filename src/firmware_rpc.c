@@ -32,6 +32,7 @@
 #include "zps_apl_aib.h"
 #include "firmware_rpc.h"
 #include "firmware_algorithm.h"
+#include "firmware_at_api.h"
 #include "rpc_usr.h"
 /****************************************************************************/
 /***        Local Function Prototypes                                     ***/

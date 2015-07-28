@@ -78,9 +78,14 @@ PUBLIC tsDevice                 g_sDevice;
 /***        Local Variables                                               ***/
 /****************************************************************************/
 
+#ifndef TARGET_END
 PRIVATE uint8    u8ChildOfInterest = 0;
+#endif
+#ifdef TARGET_ROU
 PRIVATE uint8    u8FailedRouteDiscoveries = 0;
+#endif
 
+#if 0
 //mac address which will be used when debug or manufactory.
 //it will be place at .ro_mac_address section which can be
 //written by NXP flash programmer directly.
@@ -93,7 +98,7 @@ PRIVATE uint8 au8MacAddress[]__attribute__((section(".ro_mac_address"))) = {
     0xaa, 0xcc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
 #endif
 };
-
+#endif
 
 /* On/Sleep Led */
 IO_T SleepLed;
@@ -143,6 +148,7 @@ PRIVATE void vHandleConfigureNetworkEvent(ZPS_tsAfEvent sStackEvent)
  * void
  *
  ****************************************************************************/
+#ifdef TARGET_COO
 PRIVATE void vHandleCOOStartupEvent(ZPS_tsAfEvent sStackEvent)
 {
     DBG_vPrintf(TRACE_NODE, "vHandleCOOStartupEvent \r\n");
@@ -161,6 +167,7 @@ PRIVATE void vHandleCOOStartupEvent(ZPS_tsAfEvent sStackEvent)
         OS_eActivateTask(APP_taskNWK);
     }
 }
+#endif
 
 /****************************************************************************
  *
